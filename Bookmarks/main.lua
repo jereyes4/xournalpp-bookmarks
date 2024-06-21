@@ -250,6 +250,7 @@ function export()
   if path == nil then return end
   
   local tempData = os.tmpname()
+  if sep == "\\" then tempData = tempData:sub(2) end --on windows, the first character breaks tmpname for some reason
   local tempPdf = tempData .. "_1337__.pdf" -- if this breaks something, it'd be very impressive
   
   app.export({outputFile = tempPdf})
