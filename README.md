@@ -1,5 +1,5 @@
 # xournalpp-bookmarks
-A plugin for Xournalpp that allows bookmarks.
+A plugin for Xournal++ that allows bookmarks.
 
 It does so by creating invisible layers that act as bookmarks. It comes with toolbar icons, and it can also export to pdf with the bookmarks included.
 
