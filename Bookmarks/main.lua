@@ -238,6 +238,10 @@ end
 
 function export()
 
+  if not os.execute("pdftk") then
+    app.msgbox("pdftk is missing.", {[1] = "OK"})
+    return
+  end
   local structure = app.getDocumentStructure()
 
   local defaultName = DEFAULT_EXPORT_PATH
