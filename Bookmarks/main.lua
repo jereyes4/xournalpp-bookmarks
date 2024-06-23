@@ -44,9 +44,9 @@ function delete_layer(page, layerID)
   app.setCurrentLayer(layerID)
   app.layerAction("ACTION_DELETE_LAYER")
   if currentLayerID > layerID then
-    app.setCurrentLayer(layerID)
+    app.setCurrentLayer(currentLayerID - 1)
   else
-    app.setCurrentLayer(layerID - 1)
+    app.setCurrentLayer(currentLayerID)
   end
 end
 
