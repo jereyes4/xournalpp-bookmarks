@@ -5,6 +5,8 @@ It does so by creating invisible layers that act as bookmarks. It comes with too
 
 This plugin should work at least on version 1.2.3.
 
+Please beware in case I've missed some bug, and try to keep backups in case some appear.
+
 # Instalation
 Copy the folder Bookmarks into the plugin folder of Xournalpp.
 
