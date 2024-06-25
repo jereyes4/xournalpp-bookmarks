@@ -78,6 +78,7 @@ function search_bookmark(mode)
   end
 
   app.setCurrentPage(nextBookmark)
+  app.scrollToPage(nextBookmark)
 
 end
 
@@ -198,6 +199,7 @@ function view_bookmarks()
     if data == nil then return end
     local page = model[data][column.PAGE]
     app.setCurrentPage(page)
+    app.scrollToPage(page)
   end
 
   function ui.btnDone.on_clicked()
