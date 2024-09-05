@@ -172,6 +172,7 @@ function view_bookmarks()
     local oldPage, oldName, oldLayerID = model[data][column.PAGE], model[data][column.NAME], model[data][column.LAYER_ID]
     local newPage, newName = edit_bookmark("Edit Bookmark", oldPage, oldName)
 
+    if newPage == nil then return end
     if oldPage == newPage then
       app.setCurrentPage(oldPage)
       local currentLayerID = structure.pages[oldPage].currentLayer
