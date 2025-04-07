@@ -7,7 +7,7 @@ DEFAULT_EXPORT_PATH = "/tmp/temp"
 function initUi()
 
   app.registerUi({menu="Previous Bookmark", toolbarId="CUSTOM_PREVIOUS_BOOKMARK", callback="search_bookmark", mode=-1, iconName="go-previous"})
-  app.registerUi({menu="New Bookmark", toolbarId="CUSTOM_NEW_BOOKMARK", callback="new_bookmark", iconName="bookmark-new-symbolic"})
+  app.registerUi({menu="New Bookmark", toolbarId="CUSTOM_NEW_BOOKMARK", callback="dialog_new_bookmark", iconName="bookmark-new-symbolic"})
   app.registerUi({menu="Next Bookmark", toolbarId="CUSTOM_NEXT_BOOKMARK", callback="search_bookmark", mode=1, iconName="go-next"})
   app.registerUi({menu="View Bookmarks", toolbarId="CUSTOM_VIEW_BOOKMARKS", callback = "view_bookmarks", iconName="user-bookmarks-symbolic"})
   app.registerUi({menu="Export to PDF with Bookmarks", toolbarId="CUSTOM_EXPORT_WITH_BOOKMARKS", callback="export", iconName="xopp-document-export-pdf"})
@@ -22,7 +22,7 @@ end
 function new_bookmark(name)
 
   local structure = app.getDocumentStructure()
-  
+
   local currentPage = structure.currentPage
   local currentLayerID = structure.pages[currentPage].currentLayer
 
@@ -80,6 +80,49 @@ function search_bookmark(mode)
   app.setCurrentPage(nextBookmark)
   app.scrollToPage(nextBookmark)
 
+end
+
+function dialog_new_bookmark()
+  local hasLgi, lgi = pcall(require, "lgi")
+  if not hasLgi then
+    new_bookmark()
+    return
+  end
+
+  local Gtk = lgi.require("Gtk", "3.0")
+  local Gdk = lgi.Gdk
+  local assert = lgi.assert
+  local builder = Gtk.Builder()
+  assert(builder:add_from_file(sourcePath .. "dlgNew.glade"))
+  local ui = builder.objects
+  local dialog = ui.dlgNew
+  local title = "New bookmark"
+  local defaultName=""
+
+  dialog:set_title(title)
+  ui.entryName:set_text(defaultName)
+
+  local function ok()
+    local name = ui.entryName:get_text()
+    if name ~= "" then
+       new_bookmark(name)
+    end
+    dialog:destroy()
+  end
+
+  function ui.btnNewOk.on_clicked()
+     ok()
+  end
+
+  function ui.entryName.on_activate()
+     ok()
+  end
+
+  function ui.btnNewCancel.on_clicked()
+    dialog:destroy()
+  end
+
+  dialog:show_all()
 end
 
 function view_bookmarks()
@@ -206,7 +249,7 @@ function view_bookmarks()
   function ui.btnDone.on_clicked()
     dialog:destroy()
   end
-  
+
   function edit_bookmark(title, defaultPage, defaultName)
     local builder = Gtk.Builder()
     assert(builder:add_from_file(sourcePath .. "dlgEdit.glade"))
@@ -255,15 +298,15 @@ function export()
   defaultName = defaultName .. "_export.pdf"
   local path = app.saveAs(defaultName)
   if path == nil then return end
-  
+
   local tempData = os.tmpname()
   if sep == "\\" then tempData = tempData:sub(2) end --on windows, the first character breaks tmpname for some reason
   local tempPdf = tempData .. "_1337__.pdf" -- if this breaks something, it'd be very impressive
-  
+
   app.export({outputFile = tempPdf})
 
   os.execute("pdftk \"" .. tempPdf .. "\" dump_data output \"" .. tempData .. "\"")
-  
+
   local file = io.open(tempData,"a+")
   local bookmarkTable = {}
   local numPages = #structure.pages
