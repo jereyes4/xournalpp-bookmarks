@@ -8,6 +8,7 @@ function initUi()
 
   app.registerUi({menu="Previous Bookmark", toolbarId="CUSTOM_PREVIOUS_BOOKMARK", callback="search_bookmark", mode=-1, iconName="go-previous"})
   app.registerUi({menu="New Bookmark", toolbarId="CUSTOM_NEW_BOOKMARK", callback="dialog_new_bookmark", iconName="bookmark-new-symbolic"})
+  app.registerUi({menu="New Bookmark (No dialog)", toolbarId="CUSTOM_NEW_BOOKMARK_NO_DIALOG", callback="new_bookmark", iconName="bookmark-new-symbolic"})
   app.registerUi({menu="Next Bookmark", toolbarId="CUSTOM_NEXT_BOOKMARK", callback="search_bookmark", mode=1, iconName="go-next"})
   app.registerUi({menu="View Bookmarks", toolbarId="CUSTOM_VIEW_BOOKMARKS", callback = "view_bookmarks", iconName="user-bookmarks-symbolic"})
   app.registerUi({menu="Export to PDF with Bookmarks", toolbarId="CUSTOM_EXPORT_WITH_BOOKMARKS", callback="export", iconName="xopp-document-export-pdf"})
@@ -104,18 +105,16 @@ function dialog_new_bookmark()
 
   local function ok()
     local name = ui.entryName:get_text()
-    if name ~= "" then
-       new_bookmark(name)
-    end
+    new_bookmark(name)
     dialog:destroy()
   end
 
   function ui.btnNewOk.on_clicked()
-     ok()
+    ok()
   end
 
   function ui.entryName.on_activate()
-     ok()
+    ok()
   end
 
   function ui.btnNewCancel.on_clicked()
